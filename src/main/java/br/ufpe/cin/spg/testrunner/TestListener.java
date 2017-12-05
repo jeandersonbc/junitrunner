@@ -25,14 +25,16 @@ public final class TestListener extends RunListener {
 	 * Called when an atomic test is about to be started.
 	 */
 	public void testStarted(Description description) throws java.lang.Exception {
-		System.out.println("Starting execution of test case : " + description.getMethodName());
+		System.out.printf("Starting execution of test case : %s#%s\n", description.getClassName(),
+				description.getMethodName());
 	}
 
 	/**
 	 * Called when an atomic test has finished, whether the test succeeds or fails.
 	 */
 	public void testFinished(Description description) throws java.lang.Exception {
-		System.out.println("Finished execution of test case : " + description.getMethodName());
+		System.out.printf("Finished execution of test case : %s#%s\n", description.getClassName(),
+				description.getMethodName());
 	}
 
 	/**

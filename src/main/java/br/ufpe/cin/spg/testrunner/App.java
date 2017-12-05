@@ -12,20 +12,14 @@ public class App {
 
 	public static void main(String[] args) throws ClassNotFoundException {
 		String modeParam = args[0];
-		String[] testClasses = Arrays.copyOfRange(args, 1, args.length);
+		String[] classNames = Arrays.copyOfRange(args, 1, args.length);
 
 		JUnitCore runner = new JUnitCore();
 		runner.addListener(new TestListener());
 		Computer cp = configureMode(modeParam);
 
-		Result result = runner.run(cp, findClasses(testClasses));
-
-		if (!result.getFailures().isEmpty()) {
-			System.out.println("Failed Tests:");
-			for (Failure fail : result.getFailures()) {
-				System.out.println(fail.getTestHeader());
-			}
-		}
+		Result result = runner.run(cp, findClasses(classNames));
+		displayReport(result);
 	}
 
 	public static Computer configureMode(String modeParam) {
@@ -53,11 +47,25 @@ public class App {
 		return new ParallelComputer(isParallelClasses, isParallelMethods);
 	}
 
-	public static Class<?>[] findClasses(String[] args) throws ClassNotFoundException {
-		Class<?>[] testClasses = new Class<?>[args.length - 1];
+	public static Class<?>[] findClasses(String[] classNames) throws ClassNotFoundException {
+		Class<?>[] testClasses = new Class<?>[classNames.length];
 		for (int i = 0; i < testClasses.length; i++) {
-			testClasses[i] = Class.forName(args[i + 1]);
+			testClasses[i] = Class.forName(classNames[i]);
 		}
 		return testClasses;
+	}
+
+	public static void displayReport(Result r) {
+		String resultCounters = String.format("Total: %d Failures: %d Skip: %d", r.getRunCount(), r.getFailureCount(),
+				r.getIgnoreCount());
+		String resultElapsedTime = String.format("Elapsed time: %.2f s", r.getRunTime() / 1_000.00);
+
+		StringBuilder sb = new StringBuilder();
+		for (Failure f : r.getFailures()) {
+			sb.append(f.getTestHeader()).append("\n");
+		}
+		System.out.println(resultCounters);
+		System.out.println(resultElapsedTime);
+		System.out.println(sb.toString());
 	}
 }
