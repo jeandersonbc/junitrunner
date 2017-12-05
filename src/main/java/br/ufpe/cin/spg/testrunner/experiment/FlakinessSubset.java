@@ -1,9 +1,6 @@
 package br.ufpe.cin.spg.testrunner.experiment;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.junit.runner.Computer;
 import org.junit.runner.JUnitCore;
@@ -30,19 +27,18 @@ public class FlakinessSubset {
 			results[i] = result;
 		}
 
-		Map<String, Integer> freq = new HashMap<>();
 		for (Result r : results) {
+			String resultCounters = String.format("Total: %d Failures: %d Skip: %d", r.getRunCount(),
+					r.getFailureCount(), r.getIgnoreCount());
+			String resultElapsedTime = String.format("Elapsed time: %.2f s", r.getRunTime() / 1_000.00);
+
+			StringBuilder sb = new StringBuilder();
 			for (Failure f : r.getFailures()) {
-				String failedTest = f.getTestHeader();
-				if (freq.containsKey(failedTest)) {
-					freq.put(failedTest, freq.get(failedTest) + 1);
-				} else {
-					freq.put(failedTest, 1);
-				}
+				sb.append(f.getTestHeader()).append("\n");
 			}
-		}
-		for (Entry<String, Integer> item : freq.entrySet()) {
-			System.out.println(String.format("%s: %d", item.getKey(), item.getValue()));
+			System.out.println(resultCounters);
+			System.out.println(resultElapsedTime);
+			System.out.println(sb.toString());
 		}
 	}
 }
