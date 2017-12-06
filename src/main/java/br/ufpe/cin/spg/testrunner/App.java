@@ -56,16 +56,21 @@ public class App {
 	}
 
 	public static void displayReport(Result r) {
-		String resultCounters = String.format("Total: %d Failures: %d Skip: %d", r.getRunCount(), r.getFailureCount(),
-				r.getIgnoreCount());
-		String resultElapsedTime = String.format("Elapsed time: %.2f s", r.getRunTime() / 1_000.00);
+		StringBuilder sb = buildReport(r);
+		System.out.println(sb.toString());
+	}
 
+	private static StringBuilder buildReport(Result r) {
 		StringBuilder sb = new StringBuilder();
+
+		sb.append(String.format("Total: %d Failures: %d Skip: %d", r.getRunCount(), r.getFailureCount(),
+				r.getIgnoreCount())).append("\n");
+
+		sb.append(String.format("Elapsed time: %.2f s", r.getRunTime() / 1_000.00)).append("\n");
+
 		for (Failure f : r.getFailures()) {
 			sb.append(f.getTestHeader()).append("\n");
 		}
-		System.out.println(resultCounters);
-		System.out.println(resultElapsedTime);
-		System.out.println(sb.toString());
+		return sb;
 	}
 }
