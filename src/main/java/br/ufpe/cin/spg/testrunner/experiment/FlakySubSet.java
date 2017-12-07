@@ -25,6 +25,7 @@ public class FlakySubSet {
 
 		Result[] results = new Result[N];
 		for (int i = 0; i < N; i++) {
+			System.out.println("Iteration: " + i);
 			Result result = runner.run(cp, App.findClasses(testClasses));
 			results[i] = result;
 		}
